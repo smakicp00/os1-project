@@ -1,14 +1,13 @@
-//
-// Created by marko on 20.4.22..
-//
-
 #include "../h/tcb.hpp"
 #include "../h/workers.hpp"
 #include "../h/print.hpp"
 #include "../h/riscv.hpp"
-
+#include "../h/MemoryAllocator.hpp"
 int main()
 {
+
+    MemoryAllocator::init();
+
     TCB *threads[5];
 
     threads[0] = TCB::createThread(nullptr);
@@ -23,8 +22,8 @@ int main()
     threads[4] = TCB::createThread(workerBodyD);
     printString("ThreadD created\n");
 
-    Riscv::w_stvec((uint64) &Riscv::supervisorTrap);
-    Riscv::ms_sstatus(Riscv::SSTATUS_SIE);
+    Riscv::w_stvec((uint64) &Riscv::supervisorTrap); //Tabela prekidne rutine postavljena
+    Riscv::ms_sstatus(Riscv::SSTATUS_SIE); //Omoguceni prekidi u S-modu
 
     while (!(threads[1]->isFinished() &&
              threads[2]->isFinished() &&
@@ -39,6 +38,5 @@ int main()
         delete thread;
     }
     printString("Finished\n");
-
     return 0;
 }

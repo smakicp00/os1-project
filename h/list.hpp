@@ -1,7 +1,3 @@
-//
-// Created by marko on 20.4.22..
-//
-
 #ifndef OS1_VEZBE07_RISCV_CONTEXT_SWITCH_2_INTERRUPT_LIST_HPP
 #define OS1_VEZBE07_RISCV_CONTEXT_SWITCH_2_INTERRUPT_LIST_HPP
 
@@ -90,6 +86,10 @@ public:
         if (!tail) { return 0; }
         return tail->data;
     }
+    Elem* getHeadNode()         const { return head; }
+    Elem* getNextNode(Elem *e)  const { return e->next; }
+    T*    getNodeData(Elem *e)  const { return e->data; }
+
 };
 
 #endif //OS1_VEZBE07_RISCV_CONTEXT_SWITCH_2_INTERRUPT_LIST_HPP

@@ -1,7 +1,3 @@
-//
-// Created by marko on 20.4.22..
-//
-
 #include "../lib/hw.h"
 #include "../h/tcb.hpp"
 #include "../h/print.hpp"

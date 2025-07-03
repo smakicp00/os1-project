@@ -1,7 +1,3 @@
-//
-// Created by marko on 20.4.22..
-//
-
 #include "../h/print.hpp"
 #include "../h/riscv.hpp"
 #include "../lib/console.h"
@@ -15,6 +11,7 @@ void printString(char const *string)
         __putc(*string);
         string++;
     }
+    //__putc('\n');
     Riscv::ms_sstatus(sstatus & Riscv::SSTATUS_SIE ? Riscv::SSTATUS_SIE : 0);
 }
 
@@ -46,5 +43,6 @@ void printInteger(uint64 integer)
         buf[i++] = '-';
 
     while (--i >= 0) { __putc(buf[i]); }
+    //__putc('\n');
     Riscv::ms_sstatus(sstatus & Riscv::SSTATUS_SIE ? Riscv::SSTATUS_SIE : 0);
 }

@@ -1,7 +1,3 @@
-//
-// Created by marko on 20.4.22..
-//
-
 #include "../h/tcb.hpp"
 #include "../h/riscv.hpp"
 
