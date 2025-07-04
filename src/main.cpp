@@ -3,27 +3,35 @@
 #include "../h/print.hpp"
 #include "../h/riscv.hpp"
 #include "../h/MemoryAllocator.hpp"
+#include "../h/syscall_c.hpp"
 int main()
 {
 
     MemoryAllocator::init();
 
-    TCB *threads[5];
+    thread_t threads[5];
 
-    threads[0] = TCB::createThread(nullptr);
+
+    sem_open(&Semaphore::sem, 3);
+
+    thread_create(&threads[0], nullptr,nullptr);
     TCB::running = threads[0];
 
-    threads[1] = TCB::createThread(workerBodyA);
+    thread_create(&threads[1], workerBodyA,nullptr);
     printString("ThreadA created\n");
-    threads[2] = TCB::createThread(workerBodyB);
+    thread_create(&threads[2], workerBodyB,nullptr);
     printString("ThreadB created\n");
-    threads[3] = TCB::createThread(workerBodyC);
+    thread_create(&threads[3], workerBodyC,nullptr);
     printString("ThreadC created\n");
-    threads[4] = TCB::createThread(workerBodyD);
+    thread_create(&threads[4], workerBodyD,nullptr);
     printString("ThreadD created\n");
 
     Riscv::w_stvec((uint64) &Riscv::supervisorTrap); //Tabela prekidne rutine postavljena
     Riscv::ms_sstatus(Riscv::SSTATUS_SIE); //Omoguceni prekidi u S-modu
+
+    for (int i = 0; i < 100000; ++i) {
+
+    }
 
     while (!(threads[1]->isFinished() &&
              threads[2]->isFinished() &&

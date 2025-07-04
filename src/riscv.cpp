@@ -23,31 +23,29 @@ void Riscv::handleSupervisorTrap() {
         w_sstatus(sstatus);
         w_sepc(sepc);
 
-}
-
-else if (scause == 0x8000000000000001UL) {
+    } else if (scause == 0x8000000000000001UL) {
 // interrupt: yes; cause code: supervisor software interrupt (CLINT; machine timer interrupt)
-mc_sip(SIP_SSIP);
-TCB::timeSliceCounter++;
-if (TCB::timeSliceCounter >= TCB::running->
+        mc_sip(SIP_SSIP);
+        TCB::timeSliceCounter++;
+        if (TCB::timeSliceCounter >= TCB::running->
 
-getTimeSlice()
+                getTimeSlice()
 
-) {
-uint64 volatile sepc = r_sepc();
-uint64 volatile sstatus = r_sstatus();
-TCB::timeSliceCounter = 0;
+                ) {
+            uint64 volatile sepc = r_sepc();
+            uint64 volatile sstatus = r_sstatus();
+            TCB::timeSliceCounter = 0;
 
-TCB::dispatch();
+            TCB::dispatch();
 
-w_sstatus(sstatus);
-w_sepc(sepc);
-}
-} else if (scause == 0x8000000000000009UL) {
+            w_sstatus(sstatus);
+            w_sepc(sepc);
+        }
+    } else if (scause == 0x8000000000000009UL) {
 // interrupt: yes; cause code: supervisor external interrupt (PLIC; could be keyboard)
-console_handler();
+        console_handler();
 
-} else {
+    } else {
 // unexpected trap cause
-}
+    }
 }

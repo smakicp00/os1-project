@@ -5,9 +5,9 @@ TCB *TCB::running = nullptr;
 
 uint64 TCB::timeSliceCounter = 0;
 
-TCB *TCB::createThread(Body body)
+TCB *TCB::createThread(Body body, void* arg)
 {
-    return new TCB(body, TIME_SLICE);
+    return new TCB(body, TIME_SLICE, arg);
 }
 
 void TCB::yield()
@@ -20,14 +20,13 @@ void TCB::dispatch()
     TCB *old = running;
     if (!old->isFinished()) { Scheduler::put(old); }
     running = Scheduler::get();
-
     TCB::contextSwitch(&old->context, &running->context);
 }
 
 void TCB::threadWrapper()
 {
     Riscv::popSppSpie();
-    running->body();
+    running->body(running->arg);
     running->setFinished(true);
     TCB::yield();
 }
