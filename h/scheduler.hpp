@@ -3,6 +3,7 @@
 
 #include "list.hpp"
 
+class PeriodicThread;
 class TCB;
 
 class Scheduler

@@ -8,13 +8,15 @@
 class TCB
 {
 public:
-    ~TCB() { delete[] stack; }
+    virtual ~TCB() { delete[] stack; }
 
     bool isFinished() const { return finished; }
 
     void setFinished(bool value) { finished = value; }
 
     uint64 getTimeSlice() const { return timeSlice; }
+
+    virtual bool isPeriodic() const { return false;}
 
     using Body = void (*)(void*);
 
@@ -24,7 +26,8 @@ public:
 
     static TCB *running;
 
-private:
+
+protected:
     TCB(Body body, uint64 timeSlice, void* arg) :
             body(body),
             stack(body != nullptr ? new uint64[STACK_SIZE] : nullptr),
@@ -37,6 +40,8 @@ private:
     {
         if (body != nullptr) { Scheduler::put(this); }
     }
+
+private:
 
     struct Context
     {
@@ -53,7 +58,7 @@ private:
 
     friend class Riscv;
     friend class Semaphore;
-
+protected:
     static void threadWrapper();
 
     static void contextSwitch(Context *oldContext, Context *runningContext);

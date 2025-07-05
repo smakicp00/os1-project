@@ -4,6 +4,9 @@
 #include "../h/riscv.hpp"
 #include "../h/MemoryAllocator.hpp"
 #include "../h/syscall_c.hpp"
+#include "../lib/console.h"
+#include "../h/riscv.hpp"
+#include "../h/PeriodicThread.hpp"
 int main()
 {
 
@@ -17,21 +20,27 @@ int main()
     thread_create(&threads[0], nullptr,nullptr);
     TCB::running = threads[0];
 
-    thread_create(&threads[1], workerBodyA,nullptr);
+
+    threads[1] = PeriodicThread::createPeriodicThread(workerBodyA, nullptr);
     printString("ThreadA created\n");
-    thread_create(&threads[2], workerBodyB,nullptr);
+    threads[2] = PeriodicThread::createPeriodicThread(workerBodyB, nullptr);
     printString("ThreadB created\n");
-    thread_create(&threads[3], workerBodyC,nullptr);
+    threads[3] = PeriodicThread::createPeriodicThread(workerBodyC, nullptr);
     printString("ThreadC created\n");
-    thread_create(&threads[4], workerBodyD,nullptr);
+    threads[4] = PeriodicThread::createPeriodicThread(workerBodyD, nullptr);
     printString("ThreadD created\n");
+
+    //thread_create(&threads[1], workerBodyA,nullptr);
+    //printString("ThreadA created\n");
+//    thread_create(&threads[2], workerBodyB,nullptr);
+//    printString("ThreadB created\n");
+//    thread_create(&threads[3], workerBodyC,nullptr);
+//    printString("ThreadC created\n");
+//    thread_create(&threads[4], workerBodyD,nullptr);
+//    printString("ThreadD created\n");
 
     Riscv::w_stvec((uint64) &Riscv::supervisorTrap); //Tabela prekidne rutine postavljena
     Riscv::ms_sstatus(Riscv::SSTATUS_SIE); //Omoguceni prekidi u S-modu
-
-    for (int i = 0; i < 100000; ++i) {
-
-    }
 
     while (!(threads[1]->isFinished() &&
              threads[2]->isFinished() &&
@@ -40,6 +49,10 @@ int main()
     {
         TCB::yield();
     }
+
+
+
+//    putc('X');
 
     for (auto &thread: threads)
     {

@@ -28,6 +28,7 @@ void workerBodyA(void*)
 
 void workerBodyB(void*)
 {
+    time_sleep(50);
     //sem_wait(Semaphore::sem);
     for (uint64 i = 0; i < 16; i++)
     {
@@ -58,6 +59,7 @@ static uint64 fibonacci(uint64 n)
 void workerBodyC(void*)
 {
     //sem_wait(Semaphore::sem);
+    //time_sleep(30);
     uint8 i = 0;
     for (; i < 3; i++)
     {
@@ -95,6 +97,7 @@ void workerBodyC(void*)
 void workerBodyD(void*)
 {
     //sem_wait(Semaphore::sem);
+    time_sleep(80);
     uint8 i = 10;
     for (; i < 13; i++)
     {
